@@ -54,7 +54,7 @@ def not_gate(a):
     else:
         return int(not(a))
 
-def buf_gate(a):
+def buffer_gate(a):
     if a == 'Z':
         return 'Z'
     elif a == 'U':
