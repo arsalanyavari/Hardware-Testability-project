@@ -1,70 +1,70 @@
-def and_gate(a, b):
-    if a == 'Z' or b == 'Z':
+from functools import reduce
+
+def and_gate(input_list = []):
+    if 'Z' in input_list:
         return 'Z'
-    elif a == 'U' or b == 'U':
+    elif 'U' in input_list:
         return 'U'
     else:
-        return a and b
+        return int(all(i for i in input_list))
         
-def nand_gate(a, b):
-    if a == 'Z' or b == 'Z':
+def nand_gate(input_list = []):
+    if 'Z' in input_list:
         return 'Z'
-    elif a == 'U' or b == 'U':
+    elif 'U' in input_list:
         return 'U'
     else:
-        return int(not(a and b))
+        return int(not(all(i for i in input_list)))
     
-def or_gate(a, b):
-    if a == 'Z' or b == 'Z':
+def or_gate(input_list = []):
+    if 'Z' in input_list:
         return 'Z'
-    elif a == 'U' or b == 'U':
+    elif 'U' in input_list:
         return 'U'
     else:
-        return a or b
+        return int(any(i for i in input_list))
 
-def nor_gate(a, b):
-    if a == 'Z' or b == 'Z':
+def nor_gate(input_list = []):
+    if 'Z' in input_list:
         return 'Z'
-    elif a == 'U' or b == 'U':
+    elif 'U' in input_list:
         return 'U'
     else:
-        return int(not(a or b))
+        return int(not(any(i for i in input_list)))
 
-def xor_gate(a, b):
-    if a == 'Z' or b == 'Z':
+def xor_gate(input_list = []):
+    if 'Z' in input_list:
         return 'Z'
-    elif a == 'U' or b == 'U':
+    elif 'U' in input_list:
         return 'U'
     else:
-        return int((a and not b) or (not a and b))
+        return int(reduce(lambda x, y: x ^ y, input_list))
 
-def xnor_gate(a, b):
-    if a == 'Z' or b == 'Z':
+def xnor_gate(input_list = []):
+    if 'Z' in input_list:
         return 'Z'
-    elif a == 'U' or b == 'U':
+    elif 'U' in input_list:
         return 'U'
     else:
-        return int((a and b) or (not a and not b))
+        return int(not(reduce(lambda x, y: x ^ y, input_list)))
 
-def not_gate(a):
-    if a == 'Z':
+def not_gate(input_):
+    if input_ == 'Z':
         return 'Z'
-    elif a == 'U':
+    elif input_ == 'U':
         return 'U'
     else:
-        return int(not(a))
+        return int(not(input_))
 
-def buffer_gate(a):
-    if a == 'Z':
+def buffer_gate(input_):
+    if input_ == 'Z':
         return 'Z'
-    elif a == 'U':
+    elif input_ == 'U':
         return 'U'
     else:
-        return a
+        return input_
 
 def fanout_gate(a, num_outputs=2):
-    outputs = []
-
     if a == 'Z':
         return ['Z'] * num_outputs
     elif a == 'U':
