@@ -160,8 +160,8 @@ def evaluate_circuit(circuit):
 
     iterator = len(circuit.get_gates())
     for _ in range(iterator):
-        input_value_list = []
         for gate in gates:
+            input_value_list = []
             gate_inputs = gate.get_inputs()
             gate_output = gate.get_output()
             gate_type = gate.get_gate_type()
@@ -169,7 +169,6 @@ def evaluate_circuit(circuit):
                 input_value_list.append(gate_input[1])
 
             gate_output[1] = gate_function(gate_type[0], input_value_list)
-            
             gate.set_output(gate_output)
 
         gate_outputs = []
@@ -206,28 +205,12 @@ def main():
     # wire_names = input(bcolors.GREEN + "Please enter the wires names >> " + bcolors.PROMPT)
     # wire_values = input(bcolors.RED + "Please enter each wire value >>" + bcolors.PROMPT)
 
-    user_input = [["1",1],["3",0],["6",0],["2",1],["7",1]]
+    user_input = [["1",1],["3",1],["6",1],["2",1],["7",1]]
     circuit = construct_circuit(code, user_input)
-
-    print(circuit.get_inputs())
-    print("")
-    print("")
-    print("")
-    for gate in circuit.get_gates():
-        print(gate.get_gate_type())
-        print(gate.get_inputs())
-        print(gate.get_output())
-        print("")
-
-    print(circuit.get_outputs())
 
     evaluate_circuit(circuit)
 
-    print("--------------------------")
-
     print(circuit.get_inputs())
-    print("")
-    print("")
     print("")
     for gate in circuit.get_gates():
         print(gate.get_gate_type())
