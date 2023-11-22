@@ -2,29 +2,31 @@ import re
 from gates import *
 from ansii_colors import bcolors
 
+
 class Circuit:
     def __init__(self):
         self.inputs = []
         self.outputs = []
         self.gates = []
 
-    def set_inputs(self, _inputs): 
+    def set_inputs(self, _inputs):
         self.inputs = _inputs
 
-    def get_inputs(self): 
+    def get_inputs(self):
         return self.inputs
 
-    def set_outputs(self, _outputs): 
+    def set_outputs(self, _outputs):
         self.outputs = _outputs
 
-    def get_outputs(self): 
+    def get_outputs(self):
         return self.outputs
 
-    def set_gates(self, _gates): 
+    def set_gates(self, _gates):
         self.gates = _gates
 
-    def get_gates(self): 
+    def get_gates(self):
         return self.gates
+
 
 class Gate:
     def __init__(self):
@@ -32,24 +34,25 @@ class Gate:
         self.gate_output = {}
         self.gate_type = ''
 
-    def set_inputs(self, _inputs): 
+    def set_inputs(self, _inputs):
         self.gate_inputs = _inputs
 
-    def get_inputs(self): 
+    def get_inputs(self):
         return self.gate_inputs
 
-    def set_output(self, _output): 
+    def set_output(self, _output):
         self.gate_output = _output
 
-    def get_output(self): 
+    def get_output(self):
         return self.gate_output
 
-    def set_gate_type(self, _gate_type): 
+    def set_gate_type(self, _gate_type):
         self.gate_type = _gate_type
 
-    def get_gate_type(self): 
+    def get_gate_type(self):
         return self.gate_type
-    
+
+
 def get_file(file_name):
     file_path = "../bench files/" + file_name + ".bench"
     code = []
@@ -62,6 +65,7 @@ def get_file(file_name):
                 continue
             code.append(line)
     return code
+
 
 def construct_circuit(code, user_input=[]):
     circuit = Circuit()
@@ -83,7 +87,10 @@ def construct_circuit(code, user_input=[]):
                         input_wire_value = user_input[index][1]
                         break
 
-            circuit_inputs.append([input_wire_name[0], int(input_wire_value)])
+            if input_wire_value != 'Z' and input_wire_value != 'U':
+                input_wire_value = int(input_wire_value)
+
+            circuit_inputs.append([input_wire_name[0], input_wire_value])
 
         elif code[i].startswith('OUTPUT'):
             output_wire_name = re.findall(r'\d+', code[i])
@@ -116,6 +123,7 @@ def construct_circuit(code, user_input=[]):
 
     return circuit
 
+
 def gate_function(gate_type, input_list):
     if gate_type == 'AND':
         return and_gate(input_list)
@@ -141,10 +149,11 @@ def gate_function(gate_type, input_list):
     if gate_type == 'BUFFER':
         return buffer_gate(input_list)
 
+
 def evaluate_circuit(circuit):
     gates = circuit.get_gates()
     inputs = circuit.get_inputs()
-    
+
     # TODO: initializer
     updated_gates = []
     for gate in gates:
@@ -175,7 +184,7 @@ def evaluate_circuit(circuit):
         for gate in gates:
             gate_outputs.append(gate.get_output())
 
-        for gate in gates:                              # TODO: makes it function
+        for gate in gates:  # TODO: makes it function
             gate_inputs = gate.get_inputs()
             for index in range(len(gate_inputs)):
                 for gate_output in gate_outputs:
@@ -197,6 +206,7 @@ def evaluate_circuit(circuit):
 def true_value_simulation():
     pass
 
+
 def main():
     # file_name = input("Please enter the bench file name: ")
     file_name = "c17"
@@ -205,20 +215,13 @@ def main():
     # wire_names = input(bcolors.GREEN + "Please enter the wires names >> " + bcolors.PROMPT)
     # wire_values = input(bcolors.RED + "Please enter each wire value >>" + bcolors.PROMPT)
 
-    user_input = [["1",1],["3",1],["6",1],["2",1],["7",1]]
+    user_input = [["1", 1], ["3", 0], ["6", 1], ["2", 'U'], ["7", 'Z']]
     circuit = construct_circuit(code, user_input)
 
     evaluate_circuit(circuit)
 
-    print(circuit.get_inputs())
-    print("")
-    for gate in circuit.get_gates():
-        print(gate.get_gate_type())
-        print(gate.get_inputs())
-        print(gate.get_output())
-        print("")
-
     print(circuit.get_outputs())
+
 
 if __name__ == "__main__":
     main()
