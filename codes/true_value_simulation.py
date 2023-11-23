@@ -204,7 +204,16 @@ def evaluate_circuit(circuit):
 
 
 def true_value_simulation():
-    pass
+    file_name = input("Please enter the bench file name: ")
+    code = get_file(file_name)
+
+    wire_names = input(bcolors.GREEN + "Please enter the wires names >> " + bcolors.PROMPT)
+    wire_values = input(bcolors.RED + "Please enter each wire value >>" + bcolors.PROMPT)
+
+    circuit = construct_circuit(code, user_input)
+    evaluate_circuit(circuit)
+
+    return circuit
 
 
 def main():
