@@ -8,6 +8,9 @@ class Circuit:
         self.inputs = []
         self.outputs = []
         self.gates = []
+        self.input_faults = []
+        self.output_faults = []
+        self.nets = []
 
     def set_inputs(self, _inputs):
         self.inputs = _inputs
@@ -27,12 +30,32 @@ class Circuit:
     def get_gates(self):
         return self.gates
 
+    def set_input_faults(self, _input_faults):
+        self.input_faults = _input_faults
+
+    def get_input_faults(self):
+        return self.input_faults
+
+    def set_output_faults(self, _output_faults):
+        self.output_faults = _output_faults
+
+    def get_output_faults(self):
+        return self.output_faults
+
+    def set_nets(self, _nets):
+        self.nets = _nets
+
+    def get_nets(self):
+        return self.nets
+
 
 class Gate:
     def __init__(self):
         self.gate_inputs = []
         self.gate_output = {}
         self.gate_type = ''
+        self.gate_input_faults = []
+        self.gate_output_faults = []
 
     def set_inputs(self, _inputs):
         self.gate_inputs = _inputs
@@ -51,6 +74,18 @@ class Gate:
 
     def get_gate_type(self):
         return self.gate_type
+
+    def set_gate_input_faults(self, _gate_input_faults):
+        self.gate_input_faults = _gate_input_faults
+
+    def get_gate_input_faults(self):
+        return self.gate_input_faults
+
+    def set_gate_output_faults(self, _gate_output_faults):
+        self.gate_output_faults = _gate_output_faults
+
+    def get_gate_output_faults(self):
+        return self.gate_output_faults
 
 
 def get_file(file_name):
@@ -71,7 +106,9 @@ def construct_circuit(code, user_input=[]):
     circuit = Circuit()
 
     circuit_inputs = []
+    circuit_input_faults = []
     circuit_outputs = []
+    circuit_output_faults = []
     circuit_gates = []
 
     for i in range(len(code)):
@@ -91,14 +128,17 @@ def construct_circuit(code, user_input=[]):
                 input_wire_value = int(input_wire_value)
 
             circuit_inputs.append([input_wire_name[0], input_wire_value])
+            circuit_input_faults.append([input_wire_name[0], []])
 
         elif code[i].startswith('OUTPUT'):
             output_wire_name = re.findall(r'\d+', code[i])
             circuit_outputs.append([output_wire_name[0], 'U'])
+            circuit_output_faults.append([output_wire_name[0], []])
 
         else:
             gate = Gate()
             input_wires = []
+            fault_wires = []
 
             string_pattern = r'\b[A-Z]+\b'
             int_pattern = r'\d+'
@@ -108,17 +148,24 @@ def construct_circuit(code, user_input=[]):
 
             gate.set_gate_type(gate_type)
             gate.set_output([gate_wire_names[0], 'U'])
+            gate.set_gate_output_faults([gate_wire_names[0], []])
             gate_wire_names.pop(0)
 
             for input_name in gate_wire_names:
                 input_wires.append([input_name, 'U'])
 
+            for input_fault_name in gate_wire_names:
+                fault_wires.append([input_fault_name, []])
+
             gate.set_inputs(input_wires)
+            gate.set_gate_input_faults(fault_wires)
 
             circuit_gates.append(gate)
 
     circuit.set_inputs(circuit_inputs)
+    circuit.set_input_faults(circuit_input_faults)
     circuit.set_outputs(circuit_outputs)
+    circuit.set_output_faults(circuit_output_faults)
     circuit.set_gates(circuit_gates)
 
     return circuit
@@ -202,35 +249,17 @@ def evaluate_circuit(circuit):
                 circuit_outputs[circuit_output_index][1] = gate_output[1]
         circuit.set_outputs(circuit_outputs)
 
-
-def true_value_simulation():
-    file_name = input("Please enter the bench file name: ")
-    code = get_file(file_name)
-
-    wire_names = input(bcolors.GREEN + "Please enter the wires names >> " + bcolors.PROMPT)
-    wire_values = input(bcolors.RED + "Please enter each wire value >>" + bcolors.PROMPT)
-
-    circuit = construct_circuit(code, user_input)
-    evaluate_circuit(circuit)
-
     return circuit
 
 
-def main():
+def true_value_simulation():
     # file_name = input("Please enter the bench file name: ")
-    file_name = "c17"
+    file_name = 'c17'
     code = get_file(file_name)
 
-    # wire_names = input(bcolors.GREEN + "Please enter the wires names >> " + bcolors.PROMPT)
-    # wire_values = input(bcolors.RED + "Please enter each wire value >>" + bcolors.PROMPT)
-
-    user_input = [["1", 1], ["3", 0], ["6", 1], ["2", 'U'], ["7", 'Z']]
+    user_input = [["1", 1], ["3", 1], ["6", 1], ["2", 1], ["7", 1]]
     circuit = construct_circuit(code, user_input)
 
-    evaluate_circuit(circuit)
+    circuit = evaluate_circuit(circuit)
 
-    print(circuit.get_outputs())
-
-
-if __name__ == "__main__":
-    main()
+    return circuit
