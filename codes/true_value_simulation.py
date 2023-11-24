@@ -117,12 +117,12 @@ def construct_circuit(code, user_input=[]):
             if user_input == []:
                 input_wire_value = input('please enter value for ' + input_wire_name[0] + ' : ')
             else:
-                index = -1
+                index = 0
                 for line_number in user_input:
-                    index += 1
                     if line_number[0] == input_wire_name[0]:
                         input_wire_value = user_input[index][1]
                         break
+                    index += 1
 
             if input_wire_value != 'Z' and input_wire_value != 'U':
                 input_wire_value = int(input_wire_value)

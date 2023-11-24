@@ -51,13 +51,13 @@ def resolve_gate_output_faults(gates):
                             faults = gate_input_fault[1]
                             for fault in faults:
                                 l_u_list.append(fault)
-                
+
                 if len(s_list) > 1:
                     s_i_list = [x for x in s_i_list if s_i_list.count(x) == len(s_list)]
 
                 output_fault_list = [x for x in s_i_list if x not in l_u_list]
 
-                if gate_type == 'NAND' and gate.get_output()[1] == 0:
+                if gate.get_output()[1] == 0:
                     fault = str(gate.get_output()[0]) + '-s-a-1'
                 else:
                     fault = str(gate.get_output()[0]) + '-s-a-0'
@@ -69,14 +69,89 @@ def resolve_gate_output_faults(gates):
             gate.set_gate_output_faults(on_hand)
 
         if gate_type == "OR" or "NOR":
-            pass
-            # 
+            output_fault_list = []
+            l_list = []
+            s_list = []
+            gate_inputs = gate.get_inputs()
+            gate_input_faults = gate.get_gate_input_faults()
 
-        if gate_type == "XOR" or "XNOR":
-            pass
+            for gate_input in gate_inputs:
+                if gate_input[1] == 1:
+                    s_list.append(gate_input[0])
+                elif gate_input[1] == 0:
+                    l_list.append(gate_input[0])
 
-        if gate_type == "NOT" or "BUFFER":
-            pass
+            if not s_list:
+                for gate_input_fault in gate_input_faults:
+                    faults = gate_input_fault[1]
+                    for fault in faults:
+                        output_fault_list.append(fault)
+
+                if gate_type == 'NOR' and gate.get_output()[1] == 1:
+                    fault = str(gate.get_output()[0]) + '-s-a-0'
+                else:
+                    fault = str(gate.get_output()[0]) + '-s-a-1'
+
+                output_fault_list.append(fault)
+
+            else:
+                s_i_list = []
+                l_u_list = []
+                for gate_input_fault in gate_input_faults:
+                    if '_' in gate_input_fault[0]:
+                        if gate_input_fault[0][:-2] in s_list:
+                            faults = gate_input_fault[1]
+                            for fault in faults:
+                                s_i_list.append(fault)
+                        elif gate_input_fault[0][:-2] in l_list:
+                            faults = gate_input_fault[1]
+                            for fault in faults:
+                                l_u_list.append(fault)
+                    else:
+                        if gate_input_fault[0] in s_list:
+                            faults = gate_input_fault[1]
+                            for fault in faults:
+                                s_i_list.append(fault)
+                        elif gate_input_fault[0] in l_list:
+                            faults = gate_input_fault[1]
+                            for fault in faults:
+                                l_u_list.append(fault)
+
+                if len(s_list) > 1:
+                    s_i_list = [x for x in s_i_list if s_i_list.count(x) == len(s_list)]
+
+                output_fault_list = [x for x in s_i_list if x not in l_u_list]
+
+                if gate_type == 'NOR' and gate.get_output()[1] == 1:
+                    fault = str(gate.get_output()[0]) + '-s-a-0'
+                else:
+                    fault = str(gate.get_output()[0]) + '-s-a-1'
+
+                output_fault_list.append(fault)
+
+            on_hand = gate.get_gate_output_faults()
+            on_hand[1] = output_fault_list
+            gate.set_gate_output_faults(on_hand)
+
+        if gate_type == "XOR" or "XNOR" or "NOT" or "BUFFER":
+            output_fault_list = []
+            gate_input_faults = gate.get_gate_input_faults()
+
+            for gate_input_fault in gate_input_faults:
+                faults = gate_input_fault[1]
+                for fault in faults:
+                    output_fault_list.append(fault)
+
+            if gate.get_output() == 0:
+                fault = str(gate.get_output()[0]) + '-s-a-1'
+            else:
+                fault = str(gate.get_output()[0]) + '-s-a-0'
+
+            output_fault_list.append(fault)
+
+            on_hand = gate.get_gate_output_faults()
+            on_hand[1] = output_fault_list
+            gate.set_gate_output_faults(on_hand)
 
 
 def resolve_circuit_input_faults(initial_input_faults, circuit):
