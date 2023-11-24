@@ -8,22 +8,22 @@ def and_gate(input_list = []):
     elif 'U' in input_list:
         return 'U'
     else:
-        1
+        return 1
         # return int(all(i for i in input_list))
         
 def nand_gate(input_list = []):
-    # tmp = and_gate(input_list)
-    # if tmp != 1 and tmp != 0:
-    #     return tmp
-    # else:
-    #     return int(not(tmp))
-
-    if 'Z' in input_list:
-        return 'Z'
-    elif 'U' in input_list:
-        return 'U'
+    tmp = and_gate(input_list)
+    if tmp != 1 and tmp != 0:
+        return tmp
     else:
-        return int(not(all(i for i in input_list)))
+        return int(not(tmp))
+
+    # if 'Z' in input_list:
+    #     return 'Z'
+    # elif 'U' in input_list:
+    #     return 'U'
+    # else:
+    #     return int(not(all(i for i in input_list)))
     
 def or_gate(input_list = []):
     if 1 in input_list:
@@ -33,7 +33,7 @@ def or_gate(input_list = []):
     elif 'U' in input_list:
         return 'U'
     else:
-        0
+        return 0
         # return int(any(i for i in input_list))
 
 def nor_gate(input_list = []):
