@@ -1,6 +1,5 @@
 import copy
 
-
 def resolve_gate_output_faults(gates):
     for gate in gates:
         gate_type = gate.get_gate_type()[0]
@@ -52,13 +51,13 @@ def resolve_gate_output_faults(gates):
                             faults = gate_input_fault[1]
                             for fault in faults:
                                 l_u_list.append(fault)
-
+                
                 if len(s_list) > 1:
-                    s_i_list = [x for x in s_i_list if s_i_list.count(x) > 1]
+                    s_i_list = [x for x in s_i_list if s_i_list.count(x) == len(s_list)]
 
                 output_fault_list = [x for x in s_i_list if x not in l_u_list]
 
-                if gate.get_output()[1] == 0:
+                if gate_type == 'NAND' and gate.get_output()[1] == 0:
                     fault = str(gate.get_output()[0]) + '-s-a-1'
                 else:
                     fault = str(gate.get_output()[0]) + '-s-a-0'
@@ -71,6 +70,7 @@ def resolve_gate_output_faults(gates):
 
         if gate_type == "OR" or "NOR":
             pass
+            # 
 
         if gate_type == "XOR" or "XNOR":
             pass
