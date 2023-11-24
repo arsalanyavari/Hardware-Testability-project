@@ -1,4 +1,4 @@
-import re
+from re import findall
 from gates import *
 from ansii_colors import bcolors
 
@@ -113,7 +113,7 @@ def construct_circuit(code, user_input=[]):
 
     for i in range(len(code)):
         if code[i].startswith('INPUT'):
-            input_wire_name = re.findall(r'\d+', code[i])
+            input_wire_name = findall(r'\d+', code[i])
             if user_input == []:
                 input_wire_value = input('please enter value for ' + input_wire_name[0] + ' : ')
             else:
@@ -131,7 +131,7 @@ def construct_circuit(code, user_input=[]):
             circuit_input_faults.append([input_wire_name[0], []])
 
         elif code[i].startswith('OUTPUT'):
-            output_wire_name = re.findall(r'\d+', code[i])
+            output_wire_name = findall(r'\d+', code[i])
             circuit_outputs.append([output_wire_name[0], 'U'])
             circuit_output_faults.append([output_wire_name[0], []])
 
@@ -143,8 +143,8 @@ def construct_circuit(code, user_input=[]):
             string_pattern = r'\b[A-Z]+\b'
             int_pattern = r'\d+'
 
-            gate_type = re.findall(string_pattern, code[i])
-            gate_wire_names = re.findall(int_pattern, code[i])
+            gate_type = findall(string_pattern, code[i])
+            gate_wire_names = findall(int_pattern, code[i])
 
             gate.set_gate_type(gate_type)
             gate.set_output([gate_wire_names[0], 'U'])
@@ -201,7 +201,6 @@ def evaluate_circuit(circuit):
     gates = circuit.get_gates()
     inputs = circuit.get_inputs()
 
-    # TODO: initializer
     updated_gates = []
     for gate in gates:
         gate_inputs = gate.get_inputs()
@@ -231,7 +230,7 @@ def evaluate_circuit(circuit):
         for gate in gates:
             gate_outputs.append(gate.get_output())
 
-        for gate in gates:  # TODO: makes it function
+        for gate in gates:
             gate_inputs = gate.get_inputs()
             for index in range(len(gate_inputs)):
                 for gate_output in gate_outputs:
@@ -252,14 +251,20 @@ def evaluate_circuit(circuit):
     return circuit
 
 
-def true_value_simulation():
-    # file_name = input("Please enter the bench file name: ")
-    file_name = 'c17'
-    code = get_file(file_name)
+def true_value_simulation(bench_file_name = 'c17', input_file_name = 'input'):
+    code = get_file(bench_file_name)
 
-    user_input = [["1", 1], ["3", 1], ["6", 1], ["2", 1], ["7", 1]]
+    with open(input_file_name, 'r') as f:
+        lines = f.readlines()
+    line1 = lines[0].split()
+    line2 = lines[1].split()
+    user_input = [[line1[i], int(line2[i])] for i in range(len(line1))]
+    
     circuit = construct_circuit(code, user_input)
-
     circuit = evaluate_circuit(circuit)
 
     return circuit
+
+if __name__ == "__main__":
+    circuit = true_value_simulation()
+    print(bcolors.RED + circuit.get_outputs() + bcolors.RESET)
