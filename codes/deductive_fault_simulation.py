@@ -133,6 +133,7 @@ def resolve_gate_output_faults(gates):
             on_hand[1] = output_fault_list
             gate.set_gate_output_faults(on_hand)
 
+        # TODO: fix XOR
         if gate_type == "XOR" or "XNOR" or "NOT" or "BUFFER":
             output_fault_list = []
             gate_input_faults = gate.get_gate_input_faults()
@@ -181,6 +182,7 @@ def resolve_circuit_output_faults(circuit, gates):
 
 def resolve_first_layer_gate_faults(initial_input_faults, gates, fan_outs):
     for initial_input_fault in initial_input_faults:
+        # TODO: fix the fanout
         _a = 1
         for gate in gates:
             g_input_faults = gate.get_gate_input_faults()
