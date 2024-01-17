@@ -1,4 +1,4 @@
-import copy
+from copy import deepcopy
 
 def resolve_gate_output_faults(gates):
     for gate in gates:
@@ -200,7 +200,7 @@ def resolve_first_layer_gate_faults(initial_input_faults, gates, fan_outs):
                 gate.set_gate_input_faults(g_input_faults)
 
     for gate in gates:
-        input_faults = copy.deepcopy(gate.get_gate_input_faults())
+        input_faults = deepcopy(gate.get_gate_input_faults())
         for index in range(len(input_faults)):
             if '_' in input_faults[index][0]:
                 new_sa = input_faults[index][0] + input_faults[index][1][0][-6:]
@@ -228,7 +228,7 @@ def resolve_mid_circuit_input_faults(gate_output_faults, gates, fan_outs):
                 gate.set_gate_input_faults(g_input_faults)
 
     for gate in gates:
-        input_faults = copy.deepcopy(gate.get_gate_input_faults())
+        input_faults = deepcopy(gate.get_gate_input_faults())
         for index in range(len(input_faults)):
             if '_' in input_faults[index][0]:
                 new_sa = input_faults[index][0] + input_faults[index][1][-1][-6:]
@@ -279,5 +279,9 @@ def deductive_fault_simulation(circuit):
     resolve_circuit_output_faults(circuit, gates)
     return circuit
 
-if __name__ == "__main__":      #TODO: complete the main function
-    pass
+def print_deductive_fault(circuit):
+    gates = circuit.get_gates()
+    for gate in gates:
+        print(gate.get_gate_input_faults())
+        print(gate.get_gate_output_faults())
+        print('')

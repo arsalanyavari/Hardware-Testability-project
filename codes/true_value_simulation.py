@@ -1,5 +1,4 @@
 from gates import *
-from ansii_colors import bcolors
 
 def gate_function(gate_type, input_list):
     if gate_type == 'AND':
@@ -84,9 +83,3 @@ def evaluate_circuit(circuit):
 def true_value_simulation(circuit):
     circuit = evaluate_circuit(circuit)
     return circuit
-
-
-if __name__ == "__main__":     #TODO: complete the main function
-    circuit = construct_circuit(bench_code)
-    circuit = true_value_simulation(circuit)
-    print(bcolors.RED + circuit.get_outputs() + bcolors.RESET)

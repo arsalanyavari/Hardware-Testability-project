@@ -150,6 +150,3 @@ def construct_circuit(code, user_input=[]):
     circuit.set_gates(circuit_gates)
 
     return circuit
-
-if __name__ == "__main__":      #TODO: complete the main function
-    pass
