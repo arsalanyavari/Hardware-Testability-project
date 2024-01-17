@@ -96,7 +96,7 @@ def construct_circuit(code, user_input=[]):
         if code[i].startswith('INPUT'):
             input_wire_name = findall(r'\d+', code[i])
             if user_input == []:
-                 circuit_inputs.append([input_wire_name[0], 'U'])
+                input_wire_value = 'U'
             else:
                 index = 0
                 for line_number in user_input:
@@ -150,3 +150,6 @@ def construct_circuit(code, user_input=[]):
     circuit.set_gates(circuit_gates)
 
     return circuit
+
+if __name__ == "__main__":      #TODO: complete the main function
+    pass

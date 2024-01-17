@@ -1,8 +1,9 @@
 from os import listdir, path
 from pick import pick
-from construct_circuit import *
-from true_value_simulation import *
-from deductive_fault_simulation import *
+from construct_circuit import construct_circuit
+from true_value_simulation import true_value_simulation
+from deductive_fault_simulation import deductive_fault_simulation
+from exhaustive_simulation import exhaustive_simulation
 
 def list_files_in_directory(directory):
     file_list = [filename for filename in listdir(directory) if path.isfile(path.join(directory, filename))]
@@ -41,9 +42,17 @@ def main():
         user_input = [[line1[i], int(line2[i])] for i in range(len(line1))]        
         circuit = construct_circuit(bench_code, user_input)
         circuit = true_value_simulation(circuit)
-        deductive_fault_simulation(circuit)
+        circuit = deductive_fault_simulation(circuit)
+        gates = circuit.get_gates()
+        for gate in gates:
+            print(gate.get_gate_input_faults())
+            print(gate.get_gate_output_faults())
+            print('')
     elif phase == 1:
-        pass
+        circuit = construct_circuit(bench_code)
+        exhaustive_list = exhaustive_simulation(circuit)
+        pass #TODO:)
+
     else:
         print("Please run it again in correct format!")
 

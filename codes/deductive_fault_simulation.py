@@ -274,34 +274,8 @@ def deductive_fault_simulation(circuit):
 
         resolve_mid_circuit_input_faults(gate_output_faults, gates, fan_outs)
 
-    for gate in gates:
-        print(gate.get_gate_input_faults())
-        print(gate.get_gate_output_faults())
-        print('')
-
     resolve_circuit_output_faults(circuit, gates)
+    return circuit
 
-
-class Net:
-    def __init__(self):
-        self.value = -1
-        self.name = ''
-        self.faults = []
-
-    def set_value(self, value_):
-        self.value = value_
-
-    def get_value(self):
-        return self.value
-
-    def set_name(self, name_):
-        self.name = name_
-
-    def get_name(self):
-        return self.name
-
-    def set_faults(self, fault_):
-        self.faults = fault_
-
-    def get_faults(self):
-        return self.faults
+if __name__ == "__main__":      #TODO: complete the main function
+    pass
