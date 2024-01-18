@@ -1,6 +1,8 @@
 from copy import deepcopy
+from random import choice
 from deductive_fault_simulation import deductive_fault_simulation
 from ansii_colors import *
+from true_value_simulation import true_value_simulation
 
 def exhaustive_simulation(circuit):
     exhaustive_simulation_values = []
@@ -12,17 +14,20 @@ def exhaustive_simulation(circuit):
         for i in range(num_input_lines):
             circuit.inputs[i][1] = binary_value[i]
 
+        circuit = true_value_simulation(circuit)
         circuit = deductive_fault_simulation(circuit)
-        exhaustive_simulation_values.append([deepcopy(circuit.get_inputs()), deepcopy(circuit.get_outputs()), binary_value])
+        exhaustive_simulation_values.append([deepcopy(circuit.get_inputs()), deepcopy(circuit.get_output_faults()), binary_value])
     
     return exhaustive_simulation_values
 
 def print_exhaustive(exhaustive_list):
     for state in exhaustive_list:
+        print(bcolors.GREEN + "The circuit input is: " ,end='')
         for i in state[0]:
-            print(bcolors.GREEN + i[1], end='')
-        print(":" + bcolors.RESET)
+            print(i[1], end='')
+        print(bcolors.RESET)
         stuck_ats = set()
+        stuck_ats.clear()
         for i in state[1]:
             stuck_ats = stuck_ats | set(i[1])
         state.append(stuck_ats)
@@ -48,10 +53,16 @@ def print_fault_collapsing(exhaustive_list):
             
     collapsing_table = sorted(collapsing_table, key=len)
     result = []
-    for stuck_at_index in range(len(collapsing_table)):
-        result.append(collapsing_table[stuck_at_index][0])
-        for inputs in collapsing_table[stuck_at_index][1:]:
-            for index in range(stuck_at_index+1, len(collapsing_table)):
-                if inputs in collapsing_table[index]:
-                    collapsing_table.pop[index]
+    stuck_at_index = 0
+    while stuck_at_index < len(collapsing_table):
+        inputs = choice(collapsing_table[stuck_at_index][1:]) 
+        result.append(inputs)
+        index = stuck_at_index+1
+        while index < len(collapsing_table):
+            if inputs in collapsing_table[index]:
+                collapsing_table.pop(index)
+            else:
+                index += 1
+        stuck_at_index += 1
+    print(' '.join(map(str, result)))
     return result

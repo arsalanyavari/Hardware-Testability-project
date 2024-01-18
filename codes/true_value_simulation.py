@@ -1,4 +1,6 @@
 from gates import *
+from ansii_colors import bcolors
+
 
 def gate_function(gate_type, input_list):
     if gate_type == 'AND':
@@ -27,6 +29,7 @@ def gate_function(gate_type, input_list):
 
 
 def evaluate_circuit(circuit):
+    circuit_depth = 0
     gates = circuit.get_gates()
     inputs = circuit.get_inputs()
 
@@ -42,8 +45,12 @@ def evaluate_circuit(circuit):
 
     circuit.set_gates(updated_gates)
 
+    circuit_output_names = []
+    for outputName in circuit.get_outputs():
+        circuit_output_names.append(outputName[0])
     iterator = len(circuit.get_gates())
     for _ in range(iterator):
+        circuit_depth += 1
         for gate in gates:
             input_value_list = []
             gate_inputs = gate.get_inputs()
@@ -58,6 +65,14 @@ def evaluate_circuit(circuit):
         gate_outputs = []
         for gate in gates:
             gate_outputs.append(gate.get_output())
+
+        for i in range(len(circuit_output_names)):
+            for gate_output in gate_outputs:
+                if circuit_output_names[i] == gate_output[0] and gate_output[1] != 'U':
+                    circuit_output_names[i] = 'T'
+
+        if all(x == circuit_output_names[0] for x in circuit_output_names):
+            break
 
         for gate in gates:
             gate_inputs = gate.get_inputs()
@@ -76,7 +91,7 @@ def evaluate_circuit(circuit):
             if circuit_outputs[circuit_output_index][0] == gate_output[0]:
                 circuit_outputs[circuit_output_index][1] = gate_output[1]
         circuit.set_outputs(circuit_outputs)
-
+    circuit.set_depth(circuit_depth)
     return circuit
 
 

@@ -321,12 +321,20 @@ def deductive_fault_simulation(circuit):
 
     gates = propagate_mid_circuit_faults(gates, fan_outs)
 
-    print(circuit.get_depth())
     for _ in range(circuit.get_depth() * 5):
         gates = propagate_mid_circuit_faults(gates, fan_outs)
-
-    print(len(gates))
 
     resolve_circuit_output_faults(circuit, gates)
 
     return circuit
+
+def print_deductive_fault(circuit):
+    gates = circuit.get_gates()
+    for gate in gates:
+        print(gate.get_gate_input_faults())
+        print(gate.get_gate_output_faults())
+        print('')
+
+
+if __name__ == "__main__":  # TODO: complete the main function
+    pass

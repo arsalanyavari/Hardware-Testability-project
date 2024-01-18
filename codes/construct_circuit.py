@@ -7,6 +7,7 @@ class Circuit:
         self.gates = []
         self.input_faults = []
         self.output_faults = []
+        self.depth = 0
         self.nets = []
 
     def set_inputs(self, _inputs):
@@ -45,6 +46,12 @@ class Circuit:
     def get_nets(self):
         return self.nets
 
+    def set_depth(self, _depth):
+        self.depth = _depth
+
+    def get_depth(self):
+        return self.depth
+
 class Gate:
     def __init__(self):
         self.gate_inputs = []
@@ -82,7 +89,7 @@ class Gate:
 
     def get_gate_output_faults(self):
         return self.gate_output_faults
-    
+
 def construct_circuit(code, user_input=[]):
     circuit = Circuit()
 

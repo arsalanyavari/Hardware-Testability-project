@@ -1,9 +1,11 @@
 from os import listdir, path
 from pick import pick
+from ansii_colors import bcolors
 from construct_circuit import construct_circuit
 from true_value_simulation import true_value_simulation
 from deductive_fault_simulation import deductive_fault_simulation, print_deductive_fault
 from exhaustive_simulation import exhaustive_simulation, print_exhaustive, print_fault_collapsing
+
 
 def list_files_in_directory(directory):
     file_list = [filename for filename in listdir(directory) if path.isfile(path.join(directory, filename))]
@@ -21,6 +23,7 @@ def get_file(file_name):
                 continue
             code.append(line)
     return code
+
 
 def main():
     title = 'Please choose the appropriate phase: '
@@ -46,10 +49,13 @@ def main():
         print_deductive_fault(circuit)
 
     elif phase == 1:
+        print(1)
         circuit = construct_circuit(bench_code)
+        print(2)
         exhaustive_list = exhaustive_simulation(circuit)
+        print(3)
         exhaustive_list = print_exhaustive(exhaustive_list)
-        print("The fault collapsing result is:")
+        print(bcolors.RED + "\nThe fault collapsing result is:" + bcolors.RESET)
         print_fault_collapsing(exhaustive_list)
 
     else:
