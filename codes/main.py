@@ -3,7 +3,7 @@ from pick import pick
 from construct_circuit import construct_circuit
 from true_value_simulation import true_value_simulation
 from deductive_fault_simulation import deductive_fault_simulation, print_deductive_fault
-from exhaustive_simulation import exhaustive_simulation, print_exhaustive
+from exhaustive_simulation import exhaustive_simulation, print_exhaustive, print_fault_collapsing
 
 def list_files_in_directory(directory):
     file_list = [filename for filename in listdir(directory) if path.isfile(path.join(directory, filename))]
@@ -48,7 +48,9 @@ def main():
     elif phase == 1:
         circuit = construct_circuit(bench_code)
         exhaustive_list = exhaustive_simulation(circuit)
-        print_exhaustive(exhaustive_list)
+        exhaustive_list = print_exhaustive(exhaustive_list)
+        print("The fault collapsing result is:")
+        print_fault_collapsing(exhaustive_list)
 
     else:
         print("Please run it again in correct format!")
