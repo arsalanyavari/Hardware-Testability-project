@@ -146,9 +146,18 @@ def propagate_input_to_output(gates):
 
             output_fault_list = [x for x in faults if faults.count(x) % 2 == 1]
 
+            if gate.get_output()[1] == 0:
+                fault = str(gate.get_output()[0]) + '-s-a-1'
+            else:
+                fault = str(gate.get_output()[0]) + '-s-a-0'
+
+            output_fault_list.append(fault)
+
             on_hand = gate.get_gate_output_faults()
             on_hand[1] = remove_duplicates(output_fault_list)
             gate.set_gate_output_faults(on_hand)
+
+            print(on_hand)
 
         if gate_type == "NOT" or gate_type == "BUFFER":
             for gate_input_fault in gate_input_faults:
@@ -156,7 +165,7 @@ def propagate_input_to_output(gates):
                 for fault in faults:
                     output_fault_list.append(fault)
 
-            if gate.get_output() == 0:
+            if gate.get_output()[1] == 0:
                 fault = str(gate.get_output()[0]) + '-s-a-1'
             else:
                 fault = str(gate.get_output()[0]) + '-s-a-0'
@@ -194,7 +203,7 @@ def resolve_circuit_output_faults(circuit, gates):
         circuit.set_output_faults(circuit_output_faults)
 
 
-def initiate_first_layer_faults(initial_input_faults, gates, fan_outs):
+def initiate_first_layer_faults(initial_input_faults, gates, fan_outs, circuit):
     resolved_gates = []
     for gate in gates:
         g_input_faults = gate.get_gate_input_faults()
@@ -236,7 +245,14 @@ def initiate_first_layer_faults(initial_input_faults, gates, fan_outs):
     resolved_gates = propagate_input_to_output(resolved_gates)
 
     for resolved_gate in resolved_gates:
+        circuit_output_faults = circuit.get_output_faults()
         resolved_gate_output_faults = resolved_gate.get_gate_output_faults()
+
+        for index in range(len(circuit_output_faults)):
+            if circuit_output_faults[index][0] == resolved_gate_output_faults[0]:
+                circuit_output_faults[index][1] = resolved_gate_output_faults[1]
+            circuit.set_output_faults(circuit_output_faults)
+
         for gate in gates:
             gate_input_faults = gate.get_gate_input_faults()
             for index in range(len(gate_input_faults)):
@@ -317,7 +333,7 @@ def deductive_fault_simulation(circuit):
 
     fan_outs = get_fanout_names(gates)
 
-    gates = initiate_first_layer_faults(initial_input_faults, gates, fan_outs)
+    gates = initiate_first_layer_faults(initial_input_faults, gates, fan_outs, circuit)
 
     gates = propagate_mid_circuit_faults(gates, fan_outs)
 
