@@ -11,11 +11,11 @@ all: setup run
 
 run: setup main.py $(wildcard *.py)
 	@echo "Running main.py"
-	@python main.py
+	@python3 main.py
 
 %: %.py
 	@echo "Running $<"
-	@python $<
+	@python3 $<
 
 setup_flag := .setup_done
 

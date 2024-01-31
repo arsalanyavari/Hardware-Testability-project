@@ -1,22 +1,26 @@
 from copy import deepcopy
 from random import choice
+from construct_circuit import construct_circuit
 from deductive_fault_simulation import deductive_fault_simulation
 from ansii_colors import *
 from true_value_simulation import true_value_simulation
 
-def exhaustive_simulation(circuit):
+def exhaustive_simulation(code, circuit):
     exhaustive_simulation_values = []
+    circuit_inputs = circuit.get_inputs()
     num_input_lines = len(circuit.inputs)
     
     for i in range(2**num_input_lines):
-        binary_value = str(bin(i))[2:]
-        binary_value = '0'*(num_input_lines-len(binary_value)) + binary_value
-        for i in range(num_input_lines):
-            circuit.inputs[i][1] = binary_value[i]
+        # inputs = bin(i)[2:].zfill(len(circuit_inputs))
+        inputs = str(bin(i))[2:]
+        inputs = '0'*(num_input_lines-len(inputs)) + inputs
+        for i in range(len(circuit_inputs)):
+            circuit_inputs[i][1] = inputs[i]
 
+        circuit = construct_circuit(code ,circuit_inputs)
         circuit = true_value_simulation(circuit)
         circuit = deductive_fault_simulation(circuit)
-        exhaustive_simulation_values.append([deepcopy(circuit.get_inputs()), deepcopy(circuit.get_output_faults()), binary_value])
+        exhaustive_simulation_values.append([deepcopy(circuit.get_inputs()), deepcopy(circuit.get_output_faults()), inputs])
     
     return exhaustive_simulation_values
 
