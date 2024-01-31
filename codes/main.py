@@ -49,11 +49,8 @@ def main():
         print_deductive_fault(circuit)
 
     elif phase == 1:
-        print(1)
         circuit = construct_circuit(bench_code)
-        print(2)
         exhaustive_list = exhaustive_simulation(bench_code, circuit)
-        print(3)
         exhaustive_list = print_exhaustive(exhaustive_list)
         print(bcolors.RED + "\nThe fault collapsing result is:" + bcolors.RESET)
         print_fault_collapsing(exhaustive_list)

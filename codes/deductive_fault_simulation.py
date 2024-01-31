@@ -157,7 +157,6 @@ def propagate_input_to_output(gates):
             on_hand[1] = remove_duplicates(output_fault_list)
             gate.set_gate_output_faults(on_hand)
 
-            print(on_hand)
 
         if gate_type == "NOT" or gate_type == "BUFFER":
             for gate_input_fault in gate_input_faults:
@@ -352,5 +351,5 @@ def print_deductive_fault(circuit):
         print('')
 
 
-if __name__ == "__main__":  # TODO: complete the main function
+if __name__ == "__main__":
     pass
