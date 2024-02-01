@@ -42,9 +42,11 @@ def main():
             lines = f.readlines()
         line1 = lines[0].split()
         line2 = lines[1].split()
-        user_input = [[line1[i], int(line2[i])] for i in range(len(line1))]        
+        user_input = [[line1[i], line2[i]] for i in range(len(line1))]        
         circuit = construct_circuit(bench_code, user_input)
         circuit = true_value_simulation(circuit)
+        # print(circuit.get_outputs())
+        # print(circuit.get_output_faults())
         circuit = deductive_fault_simulation(circuit)
         print_deductive_fault(circuit)
 

@@ -35,7 +35,7 @@ def propagate_input_to_output(gates):
                     for fault in faults:
                         output_fault_list.append(fault)
 
-                if gate_type == 'NAND' and gate.get_output()[1] == 0:
+                if gate.get_output()[1] == 0:
                     fault = str(gate.get_output()[0]) + '-s-a-1'
                 else:
                     fault = str(gate.get_output()[0]) + '-s-a-0'
@@ -93,7 +93,7 @@ def propagate_input_to_output(gates):
                     for fault in faults:
                         output_fault_list.append(fault)
 
-                if gate_type == 'NOR' and gate.get_output()[1] == 1:
+                if gate_type == 'OR' and gate.get_output()[1] == 1:
                     fault = str(gate.get_output()[0]) + '-s-a-0'
                 else:
                     fault = str(gate.get_output()[0]) + '-s-a-1'
@@ -127,7 +127,7 @@ def propagate_input_to_output(gates):
                     s_i_list = [x for x in s_i_list if s_i_list.count(x) == len(s_list)]
                 output_fault_list = [x for x in s_i_list if x not in l_u_list]
 
-                if gate_type == 'NOR' and gate.get_output()[1] == 1:
+                if gate_type == 'OR' and gate.get_output()[1] == 1:
                     fault = str(gate.get_output()[0]) + '-s-a-0'
                 else:
                     fault = str(gate.get_output()[0]) + '-s-a-1'
@@ -155,6 +155,8 @@ def propagate_input_to_output(gates):
 
             on_hand = gate.get_gate_output_faults()
             on_hand[1] = remove_duplicates(output_fault_list)
+            # print(on_hand)
+
             gate.set_gate_output_faults(on_hand)
 
 
@@ -219,8 +221,8 @@ def initiate_first_layer_faults(initial_input_faults, gates, fan_outs, circuit):
 
         if delete:
             resolved_gates.append(gate)
-    gates_to_remove = set(resolved_gates)
-    gates = [x for x in gates if x not in gates_to_remove]
+    # gates_to_remove = set(resolved_gates)
+    # gates = [x for x in gates if x not in gates_to_remove]
 
     for fan_out in fan_outs:
         _a = 1
@@ -274,8 +276,8 @@ def propagate_mid_circuit_faults(gates, fan_outs):
         if not extra:
             this_step_gates.append(gate)
 
-    gates_to_remove = set(this_step_gates)
-    gates = [x for x in gates if x not in gates_to_remove]
+    # gates_to_remove = set(this_step_gates)
+    # gates = [x for x in gates if x not in gates_to_remove]
 
     for fan_out in fan_outs:
         _a = 1
@@ -345,11 +347,11 @@ def deductive_fault_simulation(circuit):
 
 def print_deductive_fault(circuit):
     gates = circuit.get_gates()
-    for gate in gates:
-        print(gate.get_gate_input_faults())
-        print(gate.get_gate_output_faults())
-        print('')
-
+    # for gate in gates:
+    #     print(gate.get_gate_input_faults())
+    #     print(gate.get_gate_output_faults())
+    #     print('')
+    print(circuit.get_output_faults())
 
 if __name__ == "__main__":
     pass

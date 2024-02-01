@@ -51,7 +51,7 @@ def nor_gate(input_list = []):
 
 def xor_gate(input_list = []):
     if 'Z' in input_list:
-        return 'Z'
+        return 'U'
     elif 'U' in input_list:
         return 'U'
     else:
